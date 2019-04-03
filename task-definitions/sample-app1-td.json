@@ -1,0 +1,52 @@
+[
+  {
+    "cpu": 256,
+    "image": "avijitsarkar123/sample-app1:0.0.1-SNAPSHOT",
+    "memory": 512,
+    "name": "sample-app1",
+    "networkMode": "awsvpc",
+    "portMappings": [
+      {
+        "containerPort": 8081,
+        "hostPort": 8081
+      }
+    ],
+    "environment": [
+      {
+        "name": "sample.app2.api.endpoint",
+        "value": "http://sample-app2-r53-alias.learnnewtech.info/sample-app2/messages"
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "/ecs/sample-app1",
+        "awslogs-region": "us-east-1",
+        "awslogs-stream-prefix": "ecs"
+      }
+    }
+  },
+  {
+    "name": "xray-sidecar",
+    "mountPoints": [],
+    "image": "amazon/aws-xray-daemon:1",
+    "cpu": 0,
+    "portMappings": [
+      {
+        "protocol": "udp",
+        "containerPort": 2000,
+        "hostPort": 2000
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "us-east-1",
+        "awslogs-stream-prefix": "ecs",
+        "awslogs-group": "/ecs/sample-app1"
+      }
+    },
+    "essential": true,
+    "volumesFrom": []
+  }
+]
